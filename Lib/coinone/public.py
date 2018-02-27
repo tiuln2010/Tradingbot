@@ -50,6 +50,6 @@ class Public:
         res['bids'] = res['bid']
         res['asks'] = res['ask']
         del res['bid'], res['ask']
-jj
+        
         return res
     
