@@ -6,9 +6,6 @@ from operator import itemgetter
 
 import re
 
-create
-
-
 log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 logging.basicConfig(format=log_format, level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -37,14 +34,14 @@ class Public:
         return res
 
 
-    def get_ticker(currency='btc'):
+    def get_ticker(self, currency='btc'):
         url = 'https://api.coinone.co.kr/ticker/?currency={}&format=json'.format(currency)
         http = httplib2.Http()
         response, content = http.request(url, 'GET')
         return json.loads(content)
 
 
-    def fetch_order_book(currency='btc'):
+    def fetch_order_book(self, currency='btc'):
         url = 'https://api.coinone.co.kr/orderbook/?currency={}&format=json'.format(currency)
         http = httplib2.Http()
         response, content = http.request(url, 'GET')
