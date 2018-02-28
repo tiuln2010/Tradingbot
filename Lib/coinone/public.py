@@ -1,7 +1,7 @@
 import logging
 import httplib2
 import simplejson as json
-from coinone.common import error_code
+from .common import error_code
 from operator import itemgetter
 
 import re
@@ -21,6 +21,7 @@ class Public:
         url = 'https://api.coinone.co.kr/trades/?currency={}&period={}&format=json&'.format(currency, period)
         http = httplib2.Http()
         response, content = http.request(url, 'GET')
+        print(response)
         res = json.loads(content)
 
         # raise error if fetching is failed.
@@ -38,6 +39,7 @@ class Public:
         url = 'https://api.coinone.co.kr/ticker/?currency={}&format=json'.format(currency)
         http = httplib2.Http()
         response, content = http.request(url, 'GET')
+        print(response)
         return json.loads(content)
 
 
@@ -45,6 +47,7 @@ class Public:
         url = 'https://api.coinone.co.kr/orderbook/?currency={}&format=json'.format(currency)
         http = httplib2.Http()
         response, content = http.request(url, 'GET')
+        print(response)
         res = json.loads(content)
 
         res['bids'] = res['bid']

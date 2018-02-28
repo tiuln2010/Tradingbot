@@ -1,18 +1,21 @@
 import ccxt
-from coinone.public import Public
+
+from Lib.coinone.public import Public
+from Lib.trade_alert import Trade_alert
+
 from pprint import pprint
 from recorder import Repeat
-from trade_alert import Trade_alert
 
-def save(msg):
-    with File("log.txt", 'a'):
-        pprint(str(msg))
+# def save(msg):
+#     with File("log.txt", 'a'):
+#         pprint(str(msg))
 
 bi = ccxt.binance()
 
 bi.apiKey = '9endinNUJkuKffy5b0kh9T3elnTscRCkepLa2TOyEhrdYyJSNGpVR5bC819XkN5O'
 bi.secret = 'dL1S08eF2k2o9frupRr5QTNMoAb2H3jJV9t8yfyeffJfRkWKFwsgEFypnJqUfz4LAPI'
 
+Public = Public()
 
 #call bid, ask
 
@@ -72,19 +75,5 @@ def test():
     print(123)
 
 
-r = Repeat(gap,1)
+r = Repeat(gap, 1)
 r.start()
-
-'''
-str(co_qtum_bid) + '\n' +
-    str(co_qtum_ask) + '\n' +
-    
-    str(bi_xrp_bid) + '\n' +
-    str(bi_xrp_ask) + '\n' +
-    
-    str(co_xrp_bid) + '\n' +
-    str(co_xrp_ask) + '\n' +
-    
-    str(bi_qtum_bid) + '\n' +
-    str(bi_qtum_ask) + '\n'
-'''

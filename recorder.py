@@ -1,7 +1,7 @@
 
-from coinone.secret import ACCESS_TOKEN, SECRET_KEY
-from coinone.public import Public
-from trade_alert import Trade_alert
+from Lib.coinone.secret import ACCESS_TOKEN, SECRET_KEY
+from Lib.coinone.public import Public
+from Lib.trade_alert import Trade_alert
 
 from datetime import datetime
 from pymongo import MongoClient
@@ -17,7 +17,7 @@ class Recorder:
         self.currency = currency
         self.available = ['btc', 'bch', 'eth', 'etc','xrp', 'qtum', 'ltc', 'iota', 'btg']
         
-    def _msg_form(method_name, currency, start_time, end_time, res):
+    def _msg_form(self, method_name, currency, start_time, end_time, res):
         msg = ('{0} - {1} is recorded\n' +
                 'start : {2} \n' +
                 'end : {3} \n' +
@@ -25,7 +25,7 @@ class Recorder:
                 'detail :'+ str(res)).format(method_name, currency, start_time, end_time)
         return msg
     
-    def _get_end_time(post):
+    def _get_end_time(self, post):
         timestamp = int(post["timestamp"])
         end = str(datetime.fromtimestamp(timestamp))
         return end
@@ -49,7 +49,7 @@ class Recorder:
             db_OB_btg = coinonedb.OB_btg
             
             post = Public.fetch_order_book(self.currency)
-            end = Recorder._get_end_time(post)
+            end = self._get_end_time(post)
             
             if self.currency == 'btc':
                 res = db_OB_btc.insert_one(post)
@@ -70,7 +70,7 @@ class Recorder:
             elif self.currency == 'btg':
                 res = db_OB_btg.insert_one(post)
             
-            msg = Recorder._msg_form('record_OB', self.currency, st, end, res)
+            msg = self._msg_form('record_OB', self.currency, st, end, res)
             
         Trade_alert.send_msg(msg)
 
@@ -138,7 +138,7 @@ class Recorder:
             post = Public.fetch_trades(self.currency, period='hour')
             trade_history = _reform_post(post)
 
-            end = Recorder._get_end_time(post)
+            end = self._get_end_time(post)
             try:
                 if self.currency == 'btc':
                     updated_list = _get_updated_TH(trade_history, db_TH_btc)
@@ -172,7 +172,7 @@ class Recorder:
             except TypeError:
                 res = 'no change'
     
-            msg = Recorder._msg_form('record_TH', self.currency, st, end, res)
+            msg = self._msg_form('record_TH', self.currency, st, end, res)
 
         Trade_alert.send_msg(msg)
 
