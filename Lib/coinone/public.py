@@ -1,3 +1,4 @@
+
 import logging
 import httplib2
 import simplejson as json
@@ -10,7 +11,7 @@ log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 logging.basicConfig(format=log_format, level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-class Public:
+class Coinone_Public:
     def fetch_trades(self, currency='btc', period='day'):
         def eval(data):
             """ Convert fetched data to native types """
@@ -41,7 +42,22 @@ class Public:
         response, content = http.request(url, 'GET')
         print(response)
         return json.loads(content)
-
+    
+    def _refactoring_order_book(self, order_book):
+        def _removeStrings(orderBook, _type):
+            re_ob = {_type + 's': []}
+            for dic in orderBook[_type] :
+                valueList = list(map(lambda _value : float(_value), dic.values()))
+                re_ob[_type + 's'].append(valueList)
+            return re_ob
+        
+        res = {}
+        bid_ref = _removeStrings(order_book, 'bid')
+        ask_ref = _removeStrings(order_book, 'ask')
+        res.update(bid_ref)
+        res.update(ask_ref)
+        
+        return res
 
     def fetch_order_book(self, currency='btc'):
         url = 'https://api.coinone.co.kr/orderbook/?currency={}&format=json'.format(currency)
@@ -49,10 +65,6 @@ class Public:
         response, content = http.request(url, 'GET')
         print(response)
         res = json.loads(content)
-
-        res['bids'] = res['bid']
-        res['asks'] = res['ask']
-        del res['bid'], res['ask']
-
+        res = self._refactoring_order_book(res)
         return res
-    
+  
