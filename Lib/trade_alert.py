@@ -5,7 +5,7 @@ class Trade_alert:
     def __init__(self, msg):
         self.msg = msg
             
-    def send_msg(msg='default'):
+    def send_msg(self, msg='default'):
         encoded_msg = '{"text":"%s"}' % msg
         headers = {
             'Content-type': 'application/json',
