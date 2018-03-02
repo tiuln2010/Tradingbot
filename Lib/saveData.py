@@ -24,6 +24,8 @@ class SaveData :
         msg = "{}.json is saved".format(name)
         t = Trade_alert(msg)
         t.send_msg()
+    
+    def _save_mongo(self, exchange, symbol, res):
         
 
     def save_ob(self):
