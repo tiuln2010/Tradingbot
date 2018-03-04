@@ -32,13 +32,6 @@ ob =[
 ar_coin_list =[
     'xrp', 'qtum', 'iota', 'bch', 'etc', 'ltc', 'eth'
 ]
- 
-# def _save_ob(li, t):
-#     for dic in li:
-#         ins = SaveData(**dic)
-#         fuc_save = ins.save_ob
-#         re = Repeat(fuc_save, t)
-#         re.start()
 
 def _make_ob_func_list(li):
     ob_func_list = []
