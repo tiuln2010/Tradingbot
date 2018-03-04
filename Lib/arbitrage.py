@@ -149,4 +149,5 @@ class Arbitrage :
         profit_rate = self._calc_arbitrage_profit_rate(buy_sell_arg)
         if profit_rate > 0.002:
             msg = self._result_msg(buy_sell_arg, profit_rate)
-            Slack_Alert.send_msg(msg)        
+            m = Slack_Alert()
+            m.send_msg(msg)

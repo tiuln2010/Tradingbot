@@ -7,6 +7,12 @@ from Lib.slack_alert import Slack_Alert
 import itertools
 import time
 import threading
+import traceback
+import datetime
+
+'''
+ARGUMENTS
+'''
 
 ob =[
     {'exchange' : 'binance', 'symbol' : 'BTC/USDT'},
@@ -28,34 +34,60 @@ ob =[
     {'exchange' : 'coinone', 'symbol' : 'eth'}
 ]   
 
-
 ar_coin_list =[
     'xrp', 'qtum', 'iota', 'bch', 'etc', 'ltc', 'eth'
 ]
 
-def _make_ob_func_list(li):
-    ob_func_list = []
-    for dic in li:
-        ins = SaveData(**dic)
-        fuc_save = ins.save_ob
-        ob_func_list.append(fuc_save)
-    return ob_func_list
-    
+'''
+ARGUMETNS
+'''
 
-def _save_ob(li, t):
-    ob_func_list = _make_ob_func_list(li)
-    while True :
-        st = time.process_time()
-        multi = Multi(ob_func_list)
-        processes = multi.run_process()
-        multi.wait_end(processes)
-        msg = time.process_time() - st
-        m = Slack_Alert()
-        m.send_msg("saving time :" + str(msg))
-        time.sleep(t)
-        print("ended")
+#DERCORATOR
 
-def _iterArCoin(li):
+def timeit(method):
+    def timed(*args, **kw):
+        
+        ts = time.time()
+        result = method(*args, **kw)
+        te = time.time()
+
+        now = datetime.datetime.now()
+        msg = ('{} ({}, {}) {:06.2f} sec').format(method.__name__, args, kw, te-ts)
+        f = open('speedlog.txt', 'a')
+        f.write('\n'+str(now)+'\n')
+        f.write(str(msg))
+        f.close()
+
+        return result
+    return timed
+
+def save_err(method):
+    def wrapper(*args, **kwargs):
+        try:
+            result = method(*args, **kwargs)
+            return result
+        except :
+            now = datetime.datetime.now()
+            a = traceback.format_exc()
+            f = open('errorlog.txt', 'a')
+            f.write('\n'+str(now)+'\n')
+            f.write(str(a))
+            f.close()
+    return wrapper
+
+#Methods
+
+@timeit
+def _runprocess(multi):
+    processes = multi.run_process()
+    multi.wait_end(processes)
+
+@save_err
+def _iterrator(li):
+    multi = Multi(li)
+    _runprocess(multi)
+
+def _combination(li):
     coin_combination_list = list(itertools.combinations(li, 2))
     return coin_combination_list
 
@@ -76,24 +108,30 @@ def _make_ar_func_list(ar_kwarg_list):
         func_list.append(func_ar)
     return func_list
 
-def _arbitrage(ar_coin_list, t):
-    coin_combination_list = _iterArCoin(ar_coin_list)
+def _make_ob_func_list(li):
+    ob_func_list = []
+    for dic in li:
+        ins = SaveData(**dic)
+        fuc_save = ins.save_ob
+        ob_func_list.append(fuc_save)
+    return ob_func_list
+
+def save_ob(li,t):
+    ob_func_list = _make_ob_func_list(li)
+    while True :
+        _iterrator(ob_func_list)
+        time.sleep(t)
+
+def arbitrage(ar_coin_list, t):
+    coin_combination_list = _combination(ar_coin_list)
     ar_kwarg_list = _make_ar_kwargs_list('coinone', 'binance', coin_combination_list)
     func_list = _make_ar_func_list(ar_kwarg_list)
     while True :
-        st = time.process_time()
-        multi = Multi(func_list)
-        processes = multi.run_process()
-        multi.wait_end(processes)
-        msg = time.process_time() - st
-        m = Slack_Alert()
-        m.send_msg("processing time :" + str(msg))
+        _iterrator(func_list)
         time.sleep(t)
-        print("ended")
-    
+
 if __name__ == "__main__" :
-    t1 = threading.Thread(target= _save_ob, args=(ob,7))
+    t1 = threading.Thread(target= save_ob, args=(ob,7))
     t1.start()
-    t2 = threading.Thread(target= _arbitrage, args=(ar_coin_list,3))
+    t2 = threading.Thread(target= arbitrage, args=(ar_coin_list,3))
     t2.start()
-    print("ended")

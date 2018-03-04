@@ -24,7 +24,7 @@ class SaveData :
         json.dump(res, contents)
         contents.close()
         msg = "{}.json is saved".format(name)
-        t = Trade_alert(msg)
+        t = Slack_Alert(msg)
         t.send_msg()
     
     def _save_mongo(self, db, col,res):
