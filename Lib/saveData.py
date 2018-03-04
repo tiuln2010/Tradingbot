@@ -1,10 +1,12 @@
 import json
 import os
+from pymongo import MongoClient
+
 
 import ccxt
 from .coinone.public import Coinone_Public
 from .secret.secret import key
-from .trade_alert import Trade_alert
+from .slack_alert import Slack_Alert
 
 class SaveData :
     def __init__(self, exchange, symbol):
@@ -25,25 +27,31 @@ class SaveData :
         t = Trade_alert(msg)
         t.send_msg()
     
-    def _save_mongo(self, exchange, symbol, res):
+    def _save_mongo(self, db, col,res):
+        client = MongoClient()
+        database = getattr(client, db)
+        collection = getattr(database, col)
+        res = collection.insert_one(res)
+        return res
         
-
     def save_ob(self):
-        def _mk_ins(exchange):
-            if exchange == 'binance':
-                bi = ccxt.binance()
-                bi.apiKey = key['Binance']['ApiKey']
-                bi.secret = key['Binance']['Secret']
-                res = bi    
-            elif exchange == 'coinone':
-                res = Coinone_Public()
+        def binance() :
+            bi = ccxt.binance()
+            bi.apiKey = key['Binance']['ApiKey']
+            bi.secret = key['Binance']['Secret']
+            ob = bi.fetch_order_book(self.symbol)
+            symbol = self.symbol.replace("/","")
+            res = self._save_mongo(self.exchange, 'OB_'+symbol, ob)
             return res
 
-        exIns = _mk_ins(self.exchange)
-        ob = exIns.fetch_order_book(self.symbol)
-            
+        def coinone() :
+            co = Coinone_Public()
+            ob = co.fetch_order_book(self.symbol)
+            res = self._save_mongo(self.exchange, 'OB_'+self.symbol, ob)            
+            return res
+
         if self.exchange == 'binance':
-            symbol = self.symbol.replace("/","")
-            self._save_json('binance_'+symbol, ob)
+            res = binance()
         elif self.exchange == 'coinone':
-            self._save_json('coinone_'+self.symbol, ob)
+            res = coinone()
+        return res

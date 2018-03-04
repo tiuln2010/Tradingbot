@@ -1,5 +1,5 @@
 
-from coinone.public import Public
+from coinone.public import Coinone_Public
 from trade_alert import Trade_alert
 
 from datetime import datetime
@@ -47,7 +47,7 @@ class Recorder:
             db_OB_iota = coinonedb.OB_iota
             db_OB_btg = coinonedb.OB_btg
             
-            post = Public.fetch_order_book(self.currency)
+            post = Coinone_Public.fetch_order_book(self.currency)
             end = self._get_end_time(post)
             
             if self.currency == 'btc':
@@ -134,7 +134,7 @@ class Recorder:
             db_TH_ltc = coinonedb.TH_ltc
             db_TH_btg = coinonedb.TH_btg
 
-            post = Public.fetch_trades(self.currency, period='hour')
+            post = Coinone_Public.fetch_trades(self.currency, period='hour')
             trade_history = _reform_post(post)
 
             end = self._get_end_time(post)

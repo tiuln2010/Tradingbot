@@ -1,12 +1,9 @@
 import requests
 
-class Trade_alert:
+class Slack_Alert:
     """Slack alert"""
-    def __init__(self, msg='default'):
-        self.msg = msg
-            
-    def send_msg(self):
-        encoded_msg = '{"text":"%s"}' % self.msg
+    def send_msg(self, msg):
+        encoded_msg = '{"text":"%s"}' % msg
         headers = {
             'Content-type': 'application/json',
         }

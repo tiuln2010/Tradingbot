@@ -1,2 +1,7 @@
-.vscode\
-Data\
+.vscode/
+Data/
+Data/
+Lib/__pycache__/
+secret/__pycache__/
+__pycache__/
+Lib/__pycache__/trade_alert.cpython-36.pyc
