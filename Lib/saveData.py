@@ -2,11 +2,13 @@ import json
 import os
 from pymongo import MongoClient
 
-
 import ccxt
+
 from .coinone.public import Coinone_Public
 from .secret.secret import key
+
 from .slack_alert import Slack_Alert
+from .decorator import timeit, save_err
 
 class SaveData :
     def __init__(self, exchange, symbol):
@@ -32,26 +34,29 @@ class SaveData :
         database = getattr(client, db)
         collection = getattr(database, col)
         res = collection.insert_one(res)
-        return res
-        
+
+    
     def save_ob(self):
-        def binance() :
+        
+        @timeit
+        @save_err
+        def binance(symbol) :
             bi = ccxt.binance()
             bi.apiKey = key['Binance']['ApiKey']
             bi.secret = key['Binance']['Secret']
-            ob = bi.fetch_order_book(self.symbol)
-            symbol = self.symbol.replace("/","")
-            res = self._save_mongo(self.exchange, 'OB_'+symbol, ob)
+            ob = bi.fetch_order_book(symbol)
+            re_symbol = symbol.replace("/","")
+            res = self._save_mongo(self.exchange, 'OB_'+re_symbol, ob)
             return res
 
-        def coinone() :
+        def coinone(symbol) :
             co = Coinone_Public()
-            ob = co.fetch_order_book(self.symbol)
-            res = self._save_mongo(self.exchange, 'OB_'+self.symbol, ob)            
+            ob = co.fetch_order_book(symbol)
+            res = self._save_mongo(self.exchange, 'OB_'+symbol, ob)            
             return res
 
         if self.exchange == 'binance':
-            res = binance()
+            res = binance(self.symbol)
         elif self.exchange == 'coinone':
-            res = coinone()
+            res = coinone(self.symbol)
         return res

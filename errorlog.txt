@@ -1,0 +1,110 @@
+
+2018-03-05 08:54:03.445777 method : _iterrator (args : ([<bound method SaveData.save_ob of <Lib.saveData.SaveData object at 0x00000226D72C79B0>>],), {})
+Traceback (most recent call last):
+  File "C:\projects\tradingbot\Lib\decorator.py", line 25, in wrapper
+    result = method(*args, **kwargs)
+NameError: name 'kwargs' is not defined
+
+2018-03-05 08:54:03.446774 method : _iterrator (args : ([<bound method Arbitrage.arbitrage of <Lib.arbitrage.Arbitrage object at 0x00000226D7360DD8>>],), {})
+Traceback (most recent call last):
+  File "C:\projects\tradingbot\Lib\decorator.py", line 25, in wrapper
+    result = method(*args, **kwargs)
+NameError: name 'kwargs' is not defined
+
+2018-03-05 08:54:06.450528 method : _iterrator (args : ([<bound method Arbitrage.arbitrage of <Lib.arbitrage.Arbitrage object at 0x00000226D7360DD8>>],), {})
+Traceback (most recent call last):
+  File "C:\projects\tradingbot\Lib\decorator.py", line 25, in wrapper
+    result = method(*args, **kwargs)
+NameError: name 'kwargs' is not defined
+
+2018-03-05 08:54:09.452537 method : _iterrator (args : ([<bound method Arbitrage.arbitrage of <Lib.arbitrage.Arbitrage object at 0x00000226D7360DD8>>],), {})
+Traceback (most recent call last):
+  File "C:\projects\tradingbot\Lib\decorator.py", line 25, in wrapper
+    result = method(*args, **kwargs)
+NameError: name 'kwargs' is not defined
+
+2018-03-05 08:54:10.450183 method : _iterrator (args : ([<bound method SaveData.save_ob of <Lib.saveData.SaveData object at 0x00000226D72C79B0>>],), {})
+Traceback (most recent call last):
+  File "C:\projects\tradingbot\Lib\decorator.py", line 25, in wrapper
+    result = method(*args, **kw)
+NameError: name 'kwargs' is not defined
+
+2018-03-05 08:54:12.454879 method : _iterrator (args : ([<bound method Arbitrage.arbitrage of <Lib.arbitrage.Arbitrage object at 0x00000226D7360DD8>>],), {})
+Traceback (most recent call last):
+  File "C:\projects\tradingbot\Lib\decorator.py", line 25, in wrapper
+    result = method(*args, **kw)
+NameError: name 'kwargs' is not defined
+
+2018-03-05 08:54:15.456253 method : _iterrator (args : ([<bound method Arbitrage.arbitrage of <Lib.arbitrage.Arbitrage object at 0x00000226D7360DD8>>],), {})
+Traceback (most recent call last):
+  File "C:\projects\tradingbot\Lib\decorator.py", line 25, in wrapper
+    result = method(*args, **kw)
+NameError: name 'kwargs' is not defined
+
+2018-03-05 08:54:17.452561 method : _iterrator (args : ([<bound method SaveData.save_ob of <Lib.saveData.SaveData object at 0x00000226D72C79B0>>],), {})
+Traceback (most recent call last):
+  File "C:\projects\tradingbot\Lib\decorator.py", line 25, in wrapper
+    result = method(*args, **kw)
+NameError: name 'kwargs' is not defined
+
+2018-03-05 08:54:18.458239 method : _iterrator (args : ([<bound method Arbitrage.arbitrage of <Lib.arbitrage.Arbitrage object at 0x00000226D7360DD8>>],), {})
+Traceback (most recent call last):
+  File "C:\projects\tradingbot\Lib\decorator.py", line 25, in wrapper
+    result = method(*args, **kw)
+NameError: name 'kwargs' is not defined
+
+2018-03-05 08:54:31.476851 method : binance (args : ('BTCUSDT',), {})
+Traceback (most recent call last):
+  File "C:\projects\tradingbot\Lib\decorator.py", line 25, in wrapper
+    result = method(*args, **kw)
+  File "C:\projects\tradingbot\Lib\saveData.py", line 47, in binance
+    ob = bi.fetch_order_book(symbol)
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\site-packages\ccxt\binance.py", line 455, in fetch_order_book
+    market = self.market(symbol)
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\site-packages\ccxt\base\exchange.py", line 1109, in market
+    self.raise_error(ExchangeError, details='No market symbol ' + str(symbol))
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\site-packages\ccxt\base\exchange.py", line 273, in raise_error
+    raise exception_type(output)
+ccxt.base.errors.ExchangeError: binance No market symbol BTCUSDT
+
+2018-03-05 08:54:40.052538 method : binance (args : ('BTCUSDT',), {})
+Traceback (most recent call last):
+  File "C:\projects\tradingbot\Lib\decorator.py", line 25, in wrapper
+    result = method(*args, **kw)
+  File "C:\projects\tradingbot\Lib\saveData.py", line 47, in binance
+    ob = bi.fetch_order_book(symbol)
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\site-packages\ccxt\binance.py", line 455, in fetch_order_book
+    market = self.market(symbol)
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\site-packages\ccxt\base\exchange.py", line 1109, in market
+    self.raise_error(ExchangeError, details='No market symbol ' + str(symbol))
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\site-packages\ccxt\base\exchange.py", line 273, in raise_error
+    raise exception_type(output)
+ccxt.base.errors.ExchangeError: binance No market symbol BTCUSDT
+
+2018-03-05 08:55:14.476920 method : binance (args : ('BTCUSDT',), {})
+Traceback (most recent call last):
+  File "C:\projects\tradingbot\Lib\decorator.py", line 25, in wrapper
+    result = method(*args, **kw)
+  File "C:\projects\tradingbot\Lib\saveData.py", line 47, in binance
+    ob = bi.fetch_order_book(symbol)
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\site-packages\ccxt\binance.py", line 455, in fetch_order_book
+    market = self.market(symbol)
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\site-packages\ccxt\base\exchange.py", line 1109, in market
+    self.raise_error(ExchangeError, details='No market symbol ' + str(symbol))
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\site-packages\ccxt\base\exchange.py", line 273, in raise_error
+    raise exception_type(output)
+ccxt.base.errors.ExchangeError: binance No market symbol BTCUSDT
+
+2018-03-05 08:55:22.847902 method : binance (args : ('BTCUSDT',), {})
+Traceback (most recent call last):
+  File "C:\projects\tradingbot\Lib\decorator.py", line 25, in wrapper
+    result = method(*args, **kw)
+  File "C:\projects\tradingbot\Lib\saveData.py", line 47, in binance
+    ob = bi.fetch_order_book(symbol)
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\site-packages\ccxt\binance.py", line 455, in fetch_order_book
+    market = self.market(symbol)
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\site-packages\ccxt\base\exchange.py", line 1109, in market
+    self.raise_error(ExchangeError, details='No market symbol ' + str(symbol))
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\site-packages\ccxt\base\exchange.py", line 273, in raise_error
+    raise exception_type(output)
+ccxt.base.errors.ExchangeError: binance No market symbol BTCUSDT

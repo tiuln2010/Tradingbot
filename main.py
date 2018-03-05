@@ -2,6 +2,8 @@ from Lib.arbitrage import Arbitrage
 from Lib.repeat import Repeat, Multi
 from Lib.saveData import SaveData
 
+
+from Lib.decorator import timeit, save_err
 from Lib.slack_alert import Slack_Alert
 
 import itertools
@@ -15,65 +17,32 @@ ARGUMENTS
 '''
 
 ob =[
-    {'exchange' : 'binance', 'symbol' : 'BTC/USDT'},
+    {'exchange' : 'binance', 'symbol' : 'BTCUSDT'},
 
-    {'exchange' : 'binance', 'symbol' : 'XRP/BTC'},
-    {'exchange' : 'binance', 'symbol' : 'QTUM/BTC'},
-    {'exchange' : 'binance', 'symbol' : 'IOTA/BTC'},
-    {'exchange' : 'binance', 'symbol' : 'BCH/BTC'},
-    {'exchange' : 'binance', 'symbol' : 'ETC/BTC'},
-    {'exchange' : 'binance', 'symbol' : 'LTC/BTC'},        
-    {'exchange' : 'binance', 'symbol' : 'ETH/BTC'},        
+    # {'exchange' : 'binance', 'symbol' : 'XRP/BTC'},
+    # {'exchange' : 'binance', 'symbol' : 'QTUM/BTC'},
+    # {'exchange' : 'binance', 'symbol' : 'IOTA/BTC'},
+    # {'exchange' : 'binance', 'symbol' : 'BCH/BTC'},
+    # {'exchange' : 'binance', 'symbol' : 'ETC/BTC'},
+    # {'exchange' : 'binance', 'symbol' : 'LTC/BTC'},        
+    # {'exchange' : 'binance', 'symbol' : 'ETH/BTC'},        
 
-    {'exchange' : 'coinone', 'symbol' : 'xrp'},
-    {'exchange' : 'coinone', 'symbol' : 'qtum'},
-    {'exchange' : 'coinone', 'symbol' : 'iota'},
-    {'exchange' : 'coinone', 'symbol' : 'bch'},
-    {'exchange' : 'coinone', 'symbol' : 'etc'},
-    {'exchange' : 'coinone', 'symbol' : 'ltc'},
-    {'exchange' : 'coinone', 'symbol' : 'eth'}
+    # {'exchange' : 'coinone', 'symbol' : 'xrp'},
+    # {'exchange' : 'coinone', 'symbol' : 'qtum'},
+    # {'exchange' : 'coinone', 'symbol' : 'iota'},
+    # {'exchange' : 'coinone', 'symbol' : 'bch'},
+    # {'exchange' : 'coinone', 'symbol' : 'etc'},
+    # {'exchange' : 'coinone', 'symbol' : 'ltc'},
+    # {'exchange' : 'coinone', 'symbol' : 'eth'}
 ]   
 
 ar_coin_list =[
-    'xrp', 'qtum', 'iota', 'bch', 'etc', 'ltc', 'eth'
+    'xrp', 'qtum'#, 'iota', 'bch', 'etc', 'ltc', 'eth'
 ]
 
 '''
 ARGUMETNS
 '''
-
-#DERCORATOR
-
-def timeit(method):
-    def timed(*args, **kw):
-        
-        ts = time.time()
-        result = method(*args, **kw)
-        te = time.time()
-
-        now = datetime.datetime.now()
-        msg = ('{} ({}, {}) {:06.2f} sec').format(method.__name__, args, kw, te-ts)
-        f = open('speedlog.txt', 'a')
-        f.write('\n'+str(now)+'\n')
-        f.write(str(msg))
-        f.close()
-
-        return result
-    return timed
-
-def save_err(method):
-    def wrapper(*args, **kwargs):
-        try:
-            result = method(*args, **kwargs)
-            return result
-        except :
-            now = datetime.datetime.now()
-            a = traceback.format_exc()
-            f = open('errorlog.txt', 'a')
-            f.write('\n'+str(now)+'\n')
-            f.write(str(a))
-            f.close()
-    return wrapper
 
 #Methods
 
