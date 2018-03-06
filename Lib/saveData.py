@@ -37,7 +37,7 @@ class SaveData :
 
     
     def save_ob(self):
-        
+
         @timeit
         @save_err
         def binance(symbol) :
@@ -55,8 +55,18 @@ class SaveData :
             res = self._save_mongo(self.exchange, 'OB_'+symbol, ob)            
             return res
 
+        def bithumb(symbol) :
+            bit = ccxt.bithumb()
+            ob = bit.fetch_order_book(symbol)
+            re_symbol = symbol.replace("/KRW","")
+            res = self._save_mongo(self.exchange, 'OB_'+re_symbol, ob)            
+            return res
+
         if self.exchange == 'binance':
             res = binance(self.symbol)
         elif self.exchange == 'coinone':
             res = coinone(self.symbol)
+        elif self.exchange == 'bithumb':
+            res = bithumb(self.symbol)
+            
         return res

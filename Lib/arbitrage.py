@@ -2,10 +2,8 @@ import ccxt
 
 from .coinone.public import Coinone_Public
 from .secret.secret import key
-
 from .repeat import Repeat
 from .ex_fee import trade_fee
-
 from .slack_alert import Slack_Alert
 
 from pprint import pprint
@@ -20,31 +18,33 @@ class Arbitrage :
         self.coin_x = coin_x
         self.coin_y = coin_y
 
-    def _fetch_price_dict(self, ex_a, ex_b, coin_x, coin_y):
-        def _name_path(name):
-            path = "./Data"
-            absPath = os.path.abspath(path)
-            jsonPath = "{}\\{}.json".format(absPath, name)
-            return jsonPath
+    def _name_path(self, name):
+        path = "./Data"
+        absPath = os.path.abspath(path)
+        jsonPath = "{}\\{}.log".format(absPath, name)
+        return jsonPath
 
-        def _save_json(self, name, res):
-            jsonPath = _name_path(name)
-            contents = open(jsonPath, 'w')
-            json.dump(res, contents)
-            contents.close()
-            print("{}.json is saved".format(name))
+    def _save_log(self, name, res):
+        jsonPath = self._name_path(name)
+        contents = open(jsonPath, 'a')
+        contents.write(res)
+        contents.close()
+        print("{}.json is saved".format(name))
+
+    def _fetch_price_dict(self, ex_a, ex_b, coin_x, coin_y):
         
         def _load_json(name):
-            jsonPath = _name_path(name)
+            jsonPath = self._name_path(name)
             res = json.load(open(jsonPath))
             print("{}.json is loaded".format(name))
             return res
 
         def _load_db(exchange, coin):
+            print(exchange, coin)
             c = MongoClient()
             col = getattr(c, exchange)
             db = getattr(col, 'OB_'+coin)
-            count = db.count() - 1
+            count = db.count() -1
             data = db.find()[count]
             return data
 
@@ -67,7 +67,9 @@ class Arbitrage :
             elif ex == 'coinone':
                 ob = _load_db(ex, coin)
                 krw_price = _first_one(_type, ob)
-
+            elif ex == 'bithumb':
+                ob = _load_db(ex, coin.upper())
+                krw_price = _first_one(_type, ob)
             return krw_price
 
         price_dict = {
@@ -139,7 +141,7 @@ class Arbitrage :
         res = (
             "Exchange    : {}, {}\n".format(self.ex_a, self.ex_b) +
             "Sell/buy    : {}, {}\n".format(buy_sell_arg['sell'], buy_sell_arg['buy']) +
-            "Profit rate : {} ".format(profit_rate)
+            "Profit rate : {} \n".format(profit_rate)
             )
         return res
 
@@ -149,5 +151,7 @@ class Arbitrage :
         profit_rate = self._calc_arbitrage_profit_rate(buy_sell_arg)
         if profit_rate > 0.002:
             msg = self._result_msg(buy_sell_arg, profit_rate)
+            self._save_log('output', msg)
             m = Slack_Alert()
             m.send_msg(msg)
+

@@ -17,28 +17,44 @@ ARGUMENTS
 '''
 
 ob =[
-    {'exchange' : 'binance', 'symbol' : 'BTCUSDT'},
+    {'exchange' : 'binance', 'symbol' : 'BTC/USDT'},
 
-    # {'exchange' : 'binance', 'symbol' : 'XRP/BTC'},
-    # {'exchange' : 'binance', 'symbol' : 'QTUM/BTC'},
-    # {'exchange' : 'binance', 'symbol' : 'IOTA/BTC'},
-    # {'exchange' : 'binance', 'symbol' : 'BCH/BTC'},
-    # {'exchange' : 'binance', 'symbol' : 'ETC/BTC'},
-    # {'exchange' : 'binance', 'symbol' : 'LTC/BTC'},        
-    # {'exchange' : 'binance', 'symbol' : 'ETH/BTC'},        
+    {'exchange' : 'binance', 'symbol' : 'XRP/BTC'},
+    {'exchange' : 'binance', 'symbol' : 'QTUM/BTC'},
+    {'exchange' : 'binance', 'symbol' : 'IOTA/BTC'},
+    {'exchange' : 'binance', 'symbol' : 'BCH/BTC'},
+    {'exchange' : 'binance', 'symbol' : 'ETC/BTC'},
+    {'exchange' : 'binance', 'symbol' : 'LTC/BTC'},        
+    {'exchange' : 'binance', 'symbol' : 'ETH/BTC'}, 
+    {'exchange' : 'binance', 'symbol' : 'XMR/KRW'},
+    {'exchange' : 'binance', 'symbol' : 'ZEC/BTC'},            
+    {'exchange' : 'binance', 'symbol' : 'EOS/BTC'},            
 
-    # {'exchange' : 'coinone', 'symbol' : 'xrp'},
-    # {'exchange' : 'coinone', 'symbol' : 'qtum'},
-    # {'exchange' : 'coinone', 'symbol' : 'iota'},
-    # {'exchange' : 'coinone', 'symbol' : 'bch'},
-    # {'exchange' : 'coinone', 'symbol' : 'etc'},
-    # {'exchange' : 'coinone', 'symbol' : 'ltc'},
-    # {'exchange' : 'coinone', 'symbol' : 'eth'}
+    {'exchange' : 'coinone', 'symbol' : 'xrp'},
+    {'exchange' : 'coinone', 'symbol' : 'qtum'},
+    {'exchange' : 'coinone', 'symbol' : 'iota'},
+    {'exchange' : 'coinone', 'symbol' : 'bch'},
+    {'exchange' : 'coinone', 'symbol' : 'etc'},
+    {'exchange' : 'coinone', 'symbol' : 'ltc'},
+    {'exchange' : 'coinone', 'symbol' : 'eth'},
+
+    {'exchange' : 'bithumb', 'symbol' : 'XRP/KRW'},
+    {'exchange' : 'bithumb', 'symbol' : 'QTUM/KRW'},
+    {'exchange' : 'bithumb', 'symbol' : 'BCH/KRW'},
+    {'exchange' : 'bithumb', 'symbol' : 'ETC/KRW'},
+    {'exchange' : 'bithumb', 'symbol' : 'LTC/KRW'},
+    {'exchange' : 'bithumb', 'symbol' : 'ETH/KRW'},
+    {'exchange' : 'bithumb', 'symbol' : 'ZEC/KRW'},
+    {'exchange' : 'bithumb', 'symbol' : 'XMR/KRW'},
+    {'exchange' : 'bithumb', 'symbol' : 'EOS/KRW'}
 ]   
 
-ar_coin_list =[
-    'xrp', 'qtum'#, 'iota', 'bch', 'etc', 'ltc', 'eth'
-]
+ar_coin_list ={
+    'coinone_binance' : ['xrp', 'qtum', 'bch', 'etc', 'ltc', 'eth', 'iota'],
+    'coinone_bithumb' : ['xrp', 'qtum', 'bch', 'etc', 'ltc', 'eth'],
+    'bithumb_binance' : ['xrp', 'qtum', 'bch', 'etc', 'ltc', 'eth', 'zec', 'xmr', 'eos']
+}
+    
 
 '''
 ARGUMETNS
@@ -91,16 +107,21 @@ def save_ob(li,t):
         _iterrator(ob_func_list)
         time.sleep(t)
 
-def arbitrage(ar_coin_list, t):
+def arbitrage(ex_a, ex_b, ar_coin_list, t):
     coin_combination_list = _combination(ar_coin_list)
-    ar_kwarg_list = _make_ar_kwargs_list('coinone', 'binance', coin_combination_list)
+    ar_kwarg_list = _make_ar_kwargs_list(ex_a, ex_b, coin_combination_list)
     func_list = _make_ar_func_list(ar_kwarg_list)
     while True :
         _iterrator(func_list)
         time.sleep(t)
 
 if __name__ == "__main__" :
-    t1 = threading.Thread(target= save_ob, args=(ob,7))
-    t1.start()
-    t2 = threading.Thread(target= arbitrage, args=(ar_coin_list,3))
-    t2.start()
+    s1 = threading.Thread(target= save_ob, args=(ob,6))
+    s1.start()
+
+    a1 = threading.Thread(target= arbitrage, args=('coinone', 'binance', ar_coin_list['coinone_binance'], 6))
+    a2 = threading.Thread(target= arbitrage, args=('coinone', 'bithumb', ar_coin_list['coinone_bithumb'], 6))
+    a3 = threading.Thread(target= arbitrage, args=('bithumb', 'binance', ar_coin_list['bithumb_binance'], 6))        
+    a1.start()
+    a2.start()
+    a3.start()
