@@ -1,10 +1,13 @@
 import ccxt
+from datetime import datetime
 
 from .coinone.public import Coinone_Public
 from .secret.secret import key
 from .repeat import Repeat
 from .ex_fee import trade_fee
 from .slack_alert import Slack_Alert
+from .decorator import timeit, save_err
+
 
 from pprint import pprint
 from pymongo import MongoClient
@@ -70,20 +73,32 @@ class Arbitrage :
             elif ex == 'bithumb':
                 ob = _load_db(ex, coin.upper())
                 krw_price = _first_one(_type, ob)
-            return krw_price
+            timestamp = ob['timestamp']
+            return krw_price, timestamp
 
         price_dict = {
-        'ax_bid' : _fetch_price(ex_a, coin_x, 'bid'),
-        'ax_ask' : _fetch_price(ex_a, coin_x, 'ask'),
-        'ay_bid' : _fetch_price(ex_a, coin_y, 'bid'),
-        'ay_ask' : _fetch_price(ex_a, coin_y, 'ask'),
-        'bx_bid' : _fetch_price(ex_b, coin_x, 'bid'),
-        'bx_ask' : _fetch_price(ex_b, coin_x, 'ask'),
-        'by_bid' : _fetch_price(ex_b, coin_y, 'bid'),
-        'by_ask' : _fetch_price(ex_b, coin_y, 'ask')
+        'ax_bid' : _fetch_price(ex_a, coin_x, 'bid')[0],
+        'ax_ask' : _fetch_price(ex_a, coin_x, 'ask')[0],
+        'ay_bid' : _fetch_price(ex_a, coin_y, 'bid')[0],
+        'ay_ask' : _fetch_price(ex_a, coin_y, 'ask')[0],
+        'bx_bid' : _fetch_price(ex_b, coin_x, 'bid')[0],
+        'bx_ask' : _fetch_price(ex_b, coin_x, 'ask')[0],
+        'by_bid' : _fetch_price(ex_b, coin_y, 'bid')[0],
+        'by_ask' : _fetch_price(ex_b, coin_y, 'ask')[0]
         }
-        return price_dict
+        time_dict = {
+        'ax_bid' : _fetch_price(ex_a, coin_x, 'bid')[1],
+        'ax_ask' : _fetch_price(ex_a, coin_x, 'ask')[1],
+        'ay_bid' : _fetch_price(ex_a, coin_y, 'bid')[1],
+        'ay_ask' : _fetch_price(ex_a, coin_y, 'ask')[1],
+        'bx_bid' : _fetch_price(ex_b, coin_x, 'bid')[1],
+        'bx_ask' : _fetch_price(ex_b, coin_x, 'ask')[1],
+        'by_bid' : _fetch_price(ex_b, coin_y, 'bid')[1],
+        'by_ask' : _fetch_price(ex_b, coin_y, 'ask')[1]
 
+        }
+        return price_dict, time_dict
+    @save_err
     def _set_buy_sell_arguments(self, price_dict):
         def _calc_bid_ask_average(bid, ask):
             average = (bid + ask) /2
@@ -101,7 +116,7 @@ class Arbitrage :
         def _find_better_arbitrage_chance(li, dic):
             def _ax_is_higer_than_ay(li):
                 flag = li['ax']/li['bx'] > li['ay']/li['by']
-                return flag
+                return flagxc
 
             if _ax_is_higer_than_ay(li):
                 arg = {
@@ -137,20 +152,24 @@ class Arbitrage :
         profit_rate = profit / (Earn + b_Earn)
         return profit_rate
 
-    def _result_msg(self, buy_sell_arg, profit_rate):
+    def _result_msg(self, buy_sell_arg, profit_rate, detail):
         res = (
+            "\nTime        : {}\n".format(datetime.now())+
             "Exchange    : {}, {}\n".format(self.ex_a, self.ex_b) +
             "Sell/buy    : {}, {}\n".format(buy_sell_arg['sell'], buy_sell_arg['buy']) +
-            "Profit rate : {} \n".format(profit_rate)
+            "Profit rate : {}\n".format(profit_rate) +
+            "Detail : {}".format(detail)
             )
         return res
-
+    
     def arbitrage(self):
-        price_dict = self._fetch_price_dict(self.ex_a, self.ex_b, self.coin_x, self.coin_y)
+        price_dict, time_dict = self._fetch_price_dict(self.ex_a, self.ex_b, self.coin_x, self.coin_y)
+        detail = { 'price_dict' : price_dict, 'time_dict' : time_dict}
         buy_sell_arg = self._set_buy_sell_arguments(price_dict)
         profit_rate = self._calc_arbitrage_profit_rate(buy_sell_arg)
+        
         if profit_rate > 0.002:
-            msg = self._result_msg(buy_sell_arg, profit_rate)
+            msg = self._result_msg(buy_sell_arg, profit_rate, detail)
             self._save_log('output', msg)
             m = Slack_Alert()
             m.send_msg(msg)

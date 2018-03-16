@@ -7,6 +7,7 @@ class Slack_Alert:
         headers = {
             'Content-type': 'application/json',
         }
+        
         url = 'https://hooks.slack.com/services/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'
         response = requests.post(url, headers=headers, data=encoded_msg)
         return response

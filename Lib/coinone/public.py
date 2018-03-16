@@ -52,8 +52,10 @@ class Coinone_Public:
             return re_ob
         
         res = {}
+        timestamp = {'timestamp' : int(order_book['timestamp'])}
         bid_ref = _removeStrings(order_book, 'bid')
         ask_ref = _removeStrings(order_book, 'ask')
+        res.update(timestamp)
         res.update(bid_ref)
         res.update(ask_ref)
         

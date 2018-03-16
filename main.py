@@ -9,6 +9,7 @@ from Lib.slack_alert import Slack_Alert
 import itertools
 import time
 import threading
+from multiprocessing import Process
 import traceback
 import datetime
 
@@ -16,38 +17,43 @@ import datetime
 ARGUMENTS
 '''
 
-ob =[
-    {'exchange' : 'binance', 'symbol' : 'BTC/USDT'},
+save_ob_dict = {
+    'binance' : [
+        'BTC/USDT',
+        'XRP/BTC',
+        'QTUM/BTC',
+        'IOTA/BTC',
+        'BCH/BTC',
+        'ETC/BTC',
+        'LTC/BTC',
+        'ETH/BTC',
+        'XMR/BTC',
+        'ZEC/BTC',
+        'EOS/BTC'
+    ],
 
-    {'exchange' : 'binance', 'symbol' : 'XRP/BTC'},
-    {'exchange' : 'binance', 'symbol' : 'QTUM/BTC'},
-    {'exchange' : 'binance', 'symbol' : 'IOTA/BTC'},
-    {'exchange' : 'binance', 'symbol' : 'BCH/BTC'},
-    {'exchange' : 'binance', 'symbol' : 'ETC/BTC'},
-    {'exchange' : 'binance', 'symbol' : 'LTC/BTC'},        
-    {'exchange' : 'binance', 'symbol' : 'ETH/BTC'}, 
-    {'exchange' : 'binance', 'symbol' : 'XMR/KRW'},
-    {'exchange' : 'binance', 'symbol' : 'ZEC/BTC'},            
-    {'exchange' : 'binance', 'symbol' : 'EOS/BTC'},            
+    'coinone' : [
+        'xrp',
+        'qtum',
+        'iota',
+        'bch',
+        'etc',
+        'ltc',
+        'eth'
+    ],
 
-    {'exchange' : 'coinone', 'symbol' : 'xrp'},
-    {'exchange' : 'coinone', 'symbol' : 'qtum'},
-    {'exchange' : 'coinone', 'symbol' : 'iota'},
-    {'exchange' : 'coinone', 'symbol' : 'bch'},
-    {'exchange' : 'coinone', 'symbol' : 'etc'},
-    {'exchange' : 'coinone', 'symbol' : 'ltc'},
-    {'exchange' : 'coinone', 'symbol' : 'eth'},
-
-    {'exchange' : 'bithumb', 'symbol' : 'XRP/KRW'},
-    {'exchange' : 'bithumb', 'symbol' : 'QTUM/KRW'},
-    {'exchange' : 'bithumb', 'symbol' : 'BCH/KRW'},
-    {'exchange' : 'bithumb', 'symbol' : 'ETC/KRW'},
-    {'exchange' : 'bithumb', 'symbol' : 'LTC/KRW'},
-    {'exchange' : 'bithumb', 'symbol' : 'ETH/KRW'},
-    {'exchange' : 'bithumb', 'symbol' : 'ZEC/KRW'},
-    {'exchange' : 'bithumb', 'symbol' : 'XMR/KRW'},
-    {'exchange' : 'bithumb', 'symbol' : 'EOS/KRW'}
-]   
+    'bithumb' : [
+        'XRP/KRW',
+        'QTUM/KRW',
+        'BCH/KRW',
+        'ETC/KRW',
+        'LTC/KRW',
+        'ETH/KRW',
+        'ZEC/KRW',
+        'XMR/KRW',
+        'EOS/KRW'
+    ]
+}
 
 ar_coin_list ={
     'coinone_binance' : ['xrp', 'qtum', 'bch', 'etc', 'ltc', 'eth', 'iota'],
@@ -116,12 +122,12 @@ def arbitrage(ex_a, ex_b, ar_coin_list, t):
         time.sleep(t)
 
 if __name__ == "__main__" :
-    s1 = threading.Thread(target= save_ob, args=(ob,6))
-    s1.start()
-
-    a1 = threading.Thread(target= arbitrage, args=('coinone', 'binance', ar_coin_list['coinone_binance'], 6))
-    a2 = threading.Thread(target= arbitrage, args=('coinone', 'bithumb', ar_coin_list['coinone_bithumb'], 6))
-    a3 = threading.Thread(target= arbitrage, args=('bithumb', 'binance', ar_coin_list['bithumb_binance'], 6))        
-    a1.start()
-    a2.start()
-    a3.start()
+    save_binance = SaveData(exchange = 'binance', symbols = save_ob_dict['binance'])
+    save_coinone = SaveData(exchange = 'coinone', symbols = save_ob_dict['coinone'])
+    save_bithumb = SaveData(exchange = 'bithumb', symbols = save_ob_dict['bithumb'])
+    P1 = Process(target= save_binance.save_obs())
+    P2 = Process(target= save_coinone.save_obs())
+    P3 = Process(target= save_bithumb.save_obs())
+    P1.start()
+    P2.start()
+    P3.start()    

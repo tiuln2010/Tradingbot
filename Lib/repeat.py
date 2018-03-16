@@ -19,6 +19,26 @@ class Repeat():
     def cancel(self):
         self.thread.cancel()
 
+# class Thread_control():
+#     def __init__(self, funcs):
+#         self.funcs = funcs
+
+#     def run_thread(self):
+#         counter = 0
+#         threads = {}
+#         for func in self.funcs:
+#            threads['Thread_'+str(counter)] = threading.Thread(target=func, results)
+#            threads['Thread_'+str(counter)].start()
+#            counter += 1
+#         print("{} threads are started".format(counter))
+#         return threads
+
+#     def wait_end(self, threads):
+#         for thread in threads.values():
+#             thread.join()
+#         print("threads are ended")
+#         return True
+
 class Multi():
     def __init__(self, funcs):
         self.funcs = funcs
