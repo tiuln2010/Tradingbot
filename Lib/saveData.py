@@ -117,5 +117,5 @@ class SaveData :
         database = getattr(client, self.exchange)
         for dic in res:
             collection = getattr(database, 'OB_'+dic['symbol'])
-            res = collection.insert(dic['order_book'])
+            collection.insert(dic['order_book'])
         return res
