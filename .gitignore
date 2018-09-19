@@ -1,3 +1,6 @@
+Data\
+.vscode\
+__pycache__\
 .vs/
 Lib/__pycache__/
 secret/__pycache__/
