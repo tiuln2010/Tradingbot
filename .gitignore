@@ -1,9 +1,8 @@
-.vscode/
 .vs/
 Data/
 Lib/__pycache__/
 secret/__pycache__/
-__pycache__/
+
 
 tradingbot.pyproj
 Lib/__pycache__/repeat.cpython-36.pyc
