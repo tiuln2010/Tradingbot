@@ -1,0 +1,36 @@
+
+2018-03-16 11:13:26.849911 method : save_obs (args : (<Lib.saveData.SaveData object at 0x000001CBCA8B7F60>,), {})
+Traceback (most recent call last):
+  File "C:\projects\tradingbot\Lib\decorator.py", line 25, in wrapper
+    result = method(*args, **kw)
+  File "C:\projects\tradingbot\Lib\saveData.py", line 106, in save_obs
+    ob = asy.get()
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\multiprocessing\pool.py", line 644, in get
+    raise self._value
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\multiprocessing\pool.py", line 119, in worker
+    result = (True, func(*args, **kwds))
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\site-packages\ccxt\bithumb.py", line 132, in fetch_order_book
+    market = self.market(symbol)
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\site-packages\ccxt\base\exchange.py", line 1109, in market
+    self.raise_error(ExchangeError, details='No market symbol ' + str(symbol))
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\site-packages\ccxt\base\exchange.py", line 273, in raise_error
+    raise exception_type(output)
+ccxt.base.errors.ExchangeError: bithumb No market symbol ETH/KRW
+
+2018-03-16 11:13:38.179120 method : save_obs (args : (<Lib.saveData.SaveData object at 0x0000020047CF7EF0>,), {})
+Traceback (most recent call last):
+  File "C:\projects\tradingbot\Lib\decorator.py", line 25, in wrapper
+    result = method(*args, **kw)
+  File "C:\projects\tradingbot\Lib\saveData.py", line 106, in save_obs
+    ob = asy.get()
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\multiprocessing\pool.py", line 644, in get
+    raise self._value
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\multiprocessing\pool.py", line 119, in worker
+    result = (True, func(*args, **kwds))
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\site-packages\ccxt\bithumb.py", line 132, in fetch_order_book
+    market = self.market(symbol)
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\site-packages\ccxt\base\exchange.py", line 1109, in market
+    self.raise_error(ExchangeError, details='No market symbol ' + str(symbol))
+  File "C:\Users\Yesjin\AppData\Local\Programs\Python\Python36\lib\site-packages\ccxt\base\exchange.py", line 273, in raise_error
+    raise exception_type(output)
+ccxt.base.errors.ExchangeError: bithumb No market symbol ETH/KRW
